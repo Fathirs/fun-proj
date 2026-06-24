@@ -169,8 +169,9 @@ function openDetail(id) {
     <div class="detail-cat-edit" id="catEdit">${catChips}</div>
     <div class="detail-section-title">${o.items.length} item · ${fmtDate(o.createdAt)}</div>
     <div class="items-grid">${itemCards}</div>
-    <div style="display:flex; gap:10px; margin-top:22px;">
-      <button class="btn-ghost" id="deleteOutfit" style="color:#ff6b6b;">🗑️ Hapus outfit</button>
+    <div style="display:flex; gap:10px; margin-top:22px; flex-wrap:wrap;">
+      <button class="btn-primary" id="saveGallery">📥 Simpan ke Galeri</button>
+      <button class="btn-ghost" id="deleteOutfit" style="color:#ff6b6b;">🗑️ Hapus</button>
     </div>`;
 
   // ganti kategori
@@ -186,6 +187,8 @@ function openDetail(id) {
     toast(`Dipindah ke ${o.category}`);
   };
 
+  content.querySelector('#saveGallery').onclick = () => saveToGallery(o);
+
   content.querySelector('#deleteOutfit').onclick = () => {
     outfits = outfits.filter((x) => x.id !== o.id);
     persist();
@@ -200,6 +203,36 @@ function openDetail(id) {
 /* ---------------- Overlays ---------------- */
 function showOverlay(sel) { $(sel).classList.remove('hidden'); }
 function closeOverlay(sel) { $(sel).classList.add('hidden'); }
+
+/* ---------------- Save to gallery ---------------- */
+async function dataUrlToFile(dataUrl, filename) {
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
+  return new File([blob], filename, { type: blob.type || 'image/jpeg' });
+}
+
+async function saveToGallery(o) {
+  const filename = `dripdex-${o.category.toLowerCase()}-${o.id}.jpg`;
+  try {
+    const file = await dataUrlToFile(o.image, filename);
+    // Web Share API: di HP munculin "Save Image" ke galeri / share ke app
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: 'DripDex outfit' });
+      return;
+    }
+  } catch (err) {
+    if (err && err.name === 'AbortError') return; // user batal, jangan fallback
+    // selain itu, lanjut ke fallback download
+  }
+  // Fallback: download biasa (desktop / browser tanpa share)
+  const a = document.createElement('a');
+  a.href = o.image;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  toast('📥 Foto disimpan');
+}
 
 /* ---------------- Capture flow ---------------- */
 function fileToDataUrl(file) {
