@@ -38,18 +38,6 @@
       </div>
     </section>
 
-    <!-- Capture zone -->
-    <section class="capture">
-      <label class="capture-drop" id="dropZone">
-        <input type="file" id="fileInput" accept="image/*" capture="environment" hidden />
-        <div class="capture-inner">
-          <span class="capture-icon">📸</span>
-          <span class="capture-text">Snap / upload outfit</span>
-          <span class="capture-sub">Jatevo AI bakal deteksi tiap item</span>
-        </div>
-      </label>
-    </section>
-
     <!-- Category filter -->
     <nav class="filter-bar" id="filterBar"></nav>
 
@@ -60,6 +48,12 @@
         <p>Belum ada outfit. Snap fit pertama lo!</p>
       </div>
     </main>
+
+    <!-- Floating camera button (center bottom) -->
+    <label class="fab-camera" id="dropZone" title="Snap outfit" aria-label="Snap outfit">
+      <input type="file" id="fileInput" accept="image/*" capture="environment" hidden />
+      <span class="fab-icon">📷</span>
+    </label>
   </div>
 
   <!-- Analyzing overlay -->
