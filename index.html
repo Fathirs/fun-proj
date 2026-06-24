@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0c0c10" />
+  <title>DripDex — Outfit Check</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">🎴</span>
+        <h1>DripDex</h1>
+      </div>
+      <button class="icon-btn" id="settingsBtn" title="Pengaturan Jatevo" aria-label="Pengaturan">⚙️</button>
+    </header>
+
+    <!-- Stats strip -->
+    <section class="stats-strip" id="statsStrip">
+      <div class="stat">
+        <span class="stat-num" id="statStreak">0</span>
+        <span class="stat-label">🔥 Streak</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="statTotal">0</span>
+        <span class="stat-label">👕 Outfit</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="statItems">0</span>
+        <span class="stat-label">🃏 Koleksi</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="statTopRarity">—</span>
+        <span class="stat-label">💎 Top</span>
+      </div>
+    </section>
+
+    <!-- Capture zone -->
+    <section class="capture">
+      <label class="capture-drop" id="dropZone">
+        <input type="file" id="fileInput" accept="image/*" capture="environment" hidden />
+        <div class="capture-inner">
+          <span class="capture-icon">📸</span>
+          <span class="capture-text">Snap / upload outfit</span>
+          <span class="capture-sub">Jatevo AI bakal deteksi tiap item</span>
+        </div>
+      </label>
+    </section>
+
+    <!-- Category filter -->
+    <nav class="filter-bar" id="filterBar"></nav>
+
+    <!-- Timeline -->
+    <main class="timeline" id="timeline">
+      <div class="empty-state" id="emptyState">
+        <span class="empty-emoji">🪞</span>
+        <p>Belum ada outfit. Snap fit pertama lo!</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Analyzing overlay -->
+  <div class="overlay hidden" id="analyzeOverlay">
+    <div class="analyze-card">
+      <img id="analyzePreview" alt="preview" />
+      <div class="analyze-status">
+        <div class="spinner"></div>
+        <p id="analyzeText">AI lagi ngecek outfit lo…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Outfit detail / result modal -->
+  <div class="overlay hidden" id="detailOverlay">
+    <div class="detail-sheet">
+      <button class="sheet-close" id="detailClose" aria-label="Tutup">✕</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <!-- Settings modal -->
+  <div class="overlay hidden" id="settingsOverlay">
+    <div class="settings-sheet">
+      <button class="sheet-close" id="settingsClose" aria-label="Tutup">✕</button>
+      <h2>⚙️ Koneksi Jatevo</h2>
+      <p class="settings-hint">Isi kredensial Jatevo lo. Disimpen lokal di browser ini aja — nggak dikirim ke mana-mana.</p>
+
+      <label class="field">
+        <span>Base URL</span>
+        <input type="text" id="cfgBaseUrl" placeholder="https://api.jatevo.ai/v1" />
+      </label>
+      <label class="field">
+        <span>Model (vision/VL)</span>
+        <input type="text" id="cfgModel" placeholder="qwen3-vl-..." />
+      </label>
+      <label class="field">
+        <span>API Key</span>
+        <input type="password" id="cfgKey" placeholder="sk-..." />
+      </label>
+
+      <label class="toggle">
+        <input type="checkbox" id="cfgDemo" />
+        <span>Demo Mode (tanpa API — pakai data dummy buat nyobain loop-nya)</span>
+      </label>
+
+      <div class="settings-actions">
+        <button class="btn-primary" id="cfgSave">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="jatevo.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
