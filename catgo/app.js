@@ -254,6 +254,7 @@ function confirmCapture() {
 
   $('#inputNickname').value = '';
   $('#inputLocation').value = '';
+  $('#inputNotes').value = '';
   showScreen('screenDetails', true);
 }
 
@@ -261,6 +262,7 @@ function confirmCapture() {
 function saveCat() {
   const nickname = $('#inputNickname').value.trim() || 'Unknown Cat';
   const location = $('#inputLocation').value.trim();
+  const notes = $('#inputNotes').value.trim();
   const rarity = $('#rarityBadge').dataset.rarity || 'Common';
 
   const cat = {
@@ -270,6 +272,7 @@ function saveCat() {
     sticker: pendingSticker,
     nickname,
     location,
+    notes,
     rarity,
   };
 
@@ -307,6 +310,14 @@ function openCatDetail(id) {
 
   const idx = [...cats].sort((a, b) => a.createdAt - b.createdAt).findIndex((c) => c.id === id);
   $('#detailDexNo').textContent = `#${String(idx + 1).padStart(3, '0')}`;
+
+  const notesSection = $('#detailNotesSection');
+  if (cat.notes) {
+    $('#detailNotes').textContent = cat.notes;
+    notesSection.classList.remove('hidden');
+  } else {
+    notesSection.classList.add('hidden');
+  }
 
   $('#btnDeleteCat').onclick = () => {
     cats = cats.filter((c) => c.id !== id);
@@ -355,8 +366,8 @@ function init() {
     if (e.target === $('#settingsOverlay')) $('#settingsOverlay').classList.add('hidden');
   };
 
-  [$('#inputNickname'), $('#inputLocation')].forEach((inp) => {
-    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') inp.blur(); });
+  [$('#inputNickname'), $('#inputLocation'), $('#inputNotes')].forEach((inp) => {
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && inp.tagName !== 'TEXTAREA') inp.blur(); });
   });
 }
 

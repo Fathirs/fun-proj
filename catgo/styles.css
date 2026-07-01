@@ -427,6 +427,11 @@ html, body {
   background: transparent;
 }
 .form-input::placeholder { color: var(--text-tertiary); }
+.form-textarea {
+  resize: none;
+  line-height: 1.5;
+  min-height: 72px;
+}
 
 /* ===== Buttons ===== */
 .btn-primary {
@@ -557,6 +562,28 @@ html, body {
   margin-bottom: 4px;
 }
 .dex-label { font-size: 13px; color: var(--text-tertiary); }
+
+.detail-notes-section {
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-top: 14px;
+}
+.detail-notes-section.hidden { display: none; }
+.detail-notes-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+.detail-notes-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
 
 /* ===== Settings button ===== */
 .settings-btn {

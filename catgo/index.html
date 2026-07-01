@@ -117,6 +117,10 @@
           <label class="form-label">Where did you find it?</label>
           <input class="form-input" id="inputLocation" type="text" placeholder="e.g. Near the market" maxlength="50" />
         </div>
+        <div class="form-group">
+          <label class="form-label">Notes</label>
+          <textarea class="form-input form-textarea" id="inputNotes" placeholder="Any observations about this cat?" maxlength="200" rows="3"></textarea>
+        </div>
       </div>
 
       <button class="btn-primary full-width" id="btnSave">Add to Collection</button>
@@ -155,6 +159,10 @@
       <div class="detail-dex-row">
         <span class="dex-number" id="detailDexNo">#001</span>
         <span class="dex-label">in your collection</span>
+      </div>
+      <div id="detailNotesSection" class="detail-notes-section hidden">
+        <div class="detail-notes-label">Notes</div>
+        <div class="detail-notes-text" id="detailNotes"></div>
       </div>
       <button class="btn-ghost-danger" id="btnDeleteCat">Delete from collection</button>
     </div>
