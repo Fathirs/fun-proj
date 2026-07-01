@@ -3,8 +3,8 @@
  * ============================================================ */
 
 const STORE_KEY = 'catgo.cats';
-const BG_REMOVAL_CDN = 'https://unpkg.com/@imgly/background-removal@1.5.8/dist/browser/index.mjs';
-const BG_REMOVAL_PUBLIC = 'https://unpkg.com/@imgly/background-removal@1.5.8/dist/browser/';
+const BG_REMOVAL_CDN = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal/dist/browser/index.mjs';
+const BG_REMOVAL_PUBLIC = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal/dist/browser/';
 
 let cats = [];
 let pendingBg = null;     // original photo dataUrl (for blurred backgrounds)
@@ -212,12 +212,11 @@ async function handleFile(file) {
 
   } catch (err) {
     console.error('Background removal failed:', err);
-    // Fallback: use original image without cut-out
     pendingSticker = bg;
     $('#procStickerImg').src = bg;
     $('#procLoading').classList.add('hidden');
     $('#procPreview').classList.remove('hidden');
-    toast('Could not remove background — using original photo');
+    toast('AI loading failed — using original photo');
   }
 }
 
