@@ -100,7 +100,7 @@ html, body {
 #collectionGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 8px 10px;
   align-content: start;
 }
 
@@ -126,11 +126,11 @@ html, body {
 .cat-card-bg { display: none; }
 .cat-card-sticker {
   position: absolute;
-  inset: 0;
+  inset: -10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
+  padding: 0;
 }
 .cat-card-sticker img {
   width: 100%;
@@ -146,13 +146,14 @@ html, body {
   padding: 0 4px;
 }
 .cat-card-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-primary);
-  border: 1.5px solid rgba(0,0,0,0.12);
-  border-radius: 20px;
-  padding: 3px 12px;
-  background: var(--surface);
+  font-size: 17px;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.3px;
+  color: var(--orange);
+  -webkit-text-stroke: 3px #fff;
+  paint-order: stroke fill;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.15);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
