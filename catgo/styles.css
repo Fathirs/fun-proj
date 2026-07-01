@@ -126,12 +126,10 @@ html, body {
   overflow: hidden;
 }
 .cat-card-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: blur(14px) brightness(0.85);
-  transform: scale(1.1);
+  display: none;
+}
+.cat-card-image {
+  background: linear-gradient(145deg, #F2F2F7 0%, #E8E8EF 100%);
 }
 .cat-card-sticker {
   position: absolute;
@@ -376,12 +374,10 @@ html, body {
   box-shadow: var(--shadow-card);
 }
 .detail-sticker-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: blur(20px) brightness(0.6);
-  transform: scale(1.1);
+  display: none;
+}
+.detail-sticker-box {
+  background: linear-gradient(145deg, #F2F2F7 0%, #E8E8EF 100%);
 }
 .detail-sticker-img {
   position: absolute;
