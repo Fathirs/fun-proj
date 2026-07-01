@@ -3,8 +3,7 @@
  * ============================================================ */
 
 const STORE_KEY = 'catgo.cats';
-const BG_REMOVAL_CDN = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal/dist/browser/index.mjs';
-const BG_REMOVAL_PUBLIC = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal/dist/browser/';
+const SETTINGS_KEY = 'catgo.settings';
 
 let cats = [];
 let pendingBg = null;     // original photo dataUrl (for blurred backgrounds)
@@ -79,13 +78,33 @@ function dataUrlToBlob(dataUrl) {
   return new Blob([arr], { type: mime });
 }
 
-/* ---- Background removal ---- */
+/* ---- Settings ---- */
+function loadSettings() {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveSettings(s) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }
+
+/* ---- Background removal via Remove.bg API ---- */
 async function removeBg(blob) {
-  const { removeBackground } = await import(BG_REMOVAL_CDN);
-  return await removeBackground(blob, {
-    publicPath: BG_REMOVAL_PUBLIC,
-    debug: false,
+  const { apiKey } = loadSettings();
+  if (!apiKey) throw new Error('No API key configured');
+
+  const form = new FormData();
+  form.append('image_file', blob, 'cat.jpg');
+  form.append('size', 'auto');
+
+  const res = await fetch('https://api.remove.bg/v1.0/removebg', {
+    method: 'POST',
+    headers: { 'X-Api-Key': apiKey },
+    body: form,
   });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.errors?.[0]?.title || `Remove.bg error ${res.status}`);
+  }
+  return await res.blob();
 }
 
 /* ---- White outline sticker ---- */
@@ -216,7 +235,8 @@ async function handleFile(file) {
     $('#procStickerImg').src = bg;
     $('#procLoading').classList.add('hidden');
     $('#procPreview').classList.remove('hidden');
-    toast('AI loading failed — using original photo');
+    const noKey = err.message === 'No API key configured';
+    toast(noKey ? 'Add a Remove.bg API key in Settings ⚙️' : `BG removal failed: ${err.message}`);
   }
 }
 
@@ -319,6 +339,21 @@ function init() {
   $('#btnSave').onclick = saveCat;
   $('#detailsBack').onclick = () => showScreen('screenCollection');
   $('#catDetailBack').onclick = () => showScreen('screenCollection');
+
+  // Settings
+  $('#settingsBtn').onclick = () => {
+    $('#inputApiKey').value = loadSettings().apiKey || '';
+    $('#settingsOverlay').classList.remove('hidden');
+  };
+  $('#settingsClose').onclick = () => $('#settingsOverlay').classList.add('hidden');
+  $('#btnSaveSettings').onclick = () => {
+    saveSettings({ apiKey: $('#inputApiKey').value.trim() });
+    $('#settingsOverlay').classList.add('hidden');
+    toast('Settings saved!');
+  };
+  $('#settingsOverlay').onclick = (e) => {
+    if (e.target === $('#settingsOverlay')) $('#settingsOverlay').classList.add('hidden');
+  };
 
   [$('#inputNickname'), $('#inputLocation')].forEach((inp) => {
     inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') inp.blur(); });
