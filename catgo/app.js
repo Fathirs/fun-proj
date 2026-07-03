@@ -188,7 +188,6 @@ function renderCollection() {
     card.className = 'cat-card';
     card.innerHTML = `
       <div class="cat-card-image">
-        <div class="cat-card-bg"></div>
         <div class="cat-card-sticker"><img src="${cat.sticker}" alt="${cat.nickname}" /></div>
         <div class="cat-card-rarity">
           <span class="rarity-badge ${cat.rarity}">${cat.rarity}</span>
@@ -196,9 +195,7 @@ function renderCollection() {
       </div>
       <div class="cat-card-info">
         <div class="cat-card-name">${cat.nickname}</div>
-        <div class="cat-card-location">${cat.location || '📍 Unknown'}</div>
       </div>`;
-    card.querySelector('.cat-card-bg').style.backgroundImage = `url(${cat.bg})`;
     card.onclick = () => openCatDetail(cat.id);
     grid.appendChild(card);
   });
@@ -245,7 +242,6 @@ function confirmCapture() {
   const rarity = assignRarity();
 
   // Fill details screen preview
-  $('#detailStickerBg').style.backgroundImage = `url(${pendingBg})`;
   $('#detailStickerImg').src = pendingSticker;
   const rarityEl = $('#rarityBadge');
   rarityEl.textContent = rarity;
@@ -297,7 +293,6 @@ function openCatDetail(id) {
   const cat = cats.find((c) => c.id === id);
   if (!cat) return;
 
-  $('#detailHeroBg').style.backgroundImage = `url(${cat.bg})`;
   $('#detailHeroImg').src = cat.sticker;
   $('#detailCatName').textContent = cat.nickname;
 
