@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0e7c66" />
+  <title>Ayat — Cari & Baca Al-Qur'an</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <a class="brand" href="#/">
+      <span class="brand-mark">۩</span>
+      <span class="brand-name">Ayat</span>
+    </a>
+    <nav class="top-nav">
+      <a href="#/bookmarks" class="nav-link" title="Bookmark">🔖</a>
+    </nav>
+  </header>
+
+  <!-- Search bar (selalu tampil, ala pasal.id) -->
+  <div class="searchbar-wrap">
+    <form class="searchbar" id="searchForm">
+      <span class="search-ico">🔎</span>
+      <input type="search" id="searchInput" placeholder="Cari ayat, kata, atau nomor surah…" autocomplete="off" />
+      <button type="submit" class="search-go">Cari</button>
+    </form>
+  </div>
+
+  <!-- Konten dinamis -->
+  <main id="view" class="view"></main>
+
+  <!-- Audio player global -->
+  <audio id="player" preload="none"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
