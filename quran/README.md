@@ -7,13 +7,24 @@ lo cari tanpa harus baca dokumen (surah) utuh.
 MVP ini **read-only client-side** (nggak ada backend). Semua data diambil dari
 API Al-Qur'an terverifikasi langsung dari browser.
 
-## Fitur (MVP)
-- 🔎 **Cari** ayat berdasar kata pada terjemahan (mis. "sabar", "rezeki")
+## Fitur
+- 🔎 **Cari kata** — cari ayat berdasar kata pada terjemahan (mis. "sabar", "rezeki")
+- ✨ **Cari makna (AI)** — tanya bahasa natural, **Jatevo AI menunjuk** ayat relevan;
+  teks ayatnya tetap diambil dari sumber terverifikasi (AI nunjuk, bukan ngarang)
 - #️⃣ Ketik **nomor surah** (1–114) di kotak cari → langsung lompat ke surah
 - 📖 **Baca per-ayat**: teks Arab + transliterasi latin + terjemahan Indonesia
+- 📚 **Tafsir per ayat** (Kemenag, via equran.id) — expand di tiap ayat
+- 📤 **Share ayat jadi kartu** — generate gambar (Arab + terjemahan + rujukan) via canvas,
+  langsung share (Web Share API) atau unduh
 - 🔊 **Audio murotal** per ayat (Mishary Alafasy)
 - 🔖 **Bookmark** ayat + **lanjut baca** (ayat terakhir dibuka)
 - 🌙 Dark mode otomatis (ikut sistem)
+
+## Cari makna (AI) — Jatevo
+Klik ⚙️ → isi **Base URL / Model / API Key** Jatevo, matiin **Demo Mode**.
+Default-nya Demo Mode **ON** (pakai contoh hasil) biar alurnya bisa dicoba tanpa key.
+Guardrail: AI **hanya menunjuk** nomor surah:ayat; teks & terjemahan selalu di-fetch
+dari API terverifikasi — AI tidak pernah menulis/mengubah isi ayat.
 
 ## Sumber data (terverifikasi)
 Pakai **[AlQuran Cloud API](https://alquran.cloud/api)** dengan edisi:
@@ -21,6 +32,8 @@ Pakai **[AlQuran Cloud API](https://alquran.cloud/api)** dengan edisi:
 - `id.indonesian` — terjemahan Bahasa Indonesia (**Kemenag**)
 - `en.transliteration` — transliterasi latin
 - `ar.alafasy` — audio murotal
+
+**Tafsir**: [equran.id API v2](https://equran.id/apidev/v2) — tafsir **Kemenag** per ayat.
 
 > Untuk versi produksi yang paling "resmi" di Indonesia, bisa di-swap ke
 > **Qur'an Kemenag API (LPMQ)** — diatur Lajnah Pentashihan Mushaf Al-Qur'an.
@@ -46,8 +59,9 @@ folder ini).
 - `app.js` — router SPA, fetch API, render, bookmark & last-read
 
 ## Roadmap
-- [ ] AI "cari berdasar makna" (semantic search via Jatevo) — nunjuk ayat, bukan generate
-- [ ] Tafsir per ayat (Kemenag / Quraish Shihab)
+- [x] AI "cari berdasar makna" (via Jatevo) — nunjuk ayat, bukan generate
+- [x] Tafsir per ayat (Kemenag)
+- [x] Share ayat jadi kartu gambar
+- [ ] Tafsir multi-sumber (Quraish Shihab / Al-Jalalain)
 - [ ] Multi-terjemahan / multi-qori
-- [ ] Share ayat jadi kartu gambar
 - [ ] Swap ke Kemenag LPMQ API (resmi)

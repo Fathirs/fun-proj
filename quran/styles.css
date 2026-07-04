@@ -68,6 +68,21 @@ a { color: inherit; text-decoration: none; }
   padding: 12px 18px;
   border-bottom: 1px solid var(--line);
 }
+.search-modes {
+  max-width: 720px; margin: 0 auto 8px;
+  display: flex; gap: 6px;
+}
+.mode {
+  flex: 1; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 700;
+  padding: 8px 10px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--ink-dim);
+}
+.mode.active {
+  background: var(--emerald-soft); color: var(--emerald);
+  border-color: var(--emerald);
+}
 .searchbar {
   max-width: 720px; margin: 0 auto;
   display: flex; align-items: center; gap: 8px;
@@ -239,3 +254,69 @@ a { color: inherit; text-decoration: none; }
   padding: 11px 18px; border-radius: 12px; font-size: 14px; z-index: 100;
   box-shadow: var(--shadow);
 }
+
+/* ---------- Tafsir block ---------- */
+.tafsir {
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px dashed var(--line);
+  font-size: 14px; color: var(--ink-dim); line-height: 1.7;
+}
+.tafsir .tafsir-label {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gold); background: var(--gold-soft);
+  padding: 3px 9px; border-radius: 999px; margin-bottom: 8px;
+}
+.tafsir.loading { color: var(--ink-dim); font-style: italic; }
+
+/* ---------- AI notice / result reason ---------- */
+.ai-notice {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--emerald-soft); border: 1px solid var(--emerald);
+  border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;
+  font-size: 13px; color: var(--ink);
+}
+.ai-notice b { color: var(--emerald); }
+.result-reason {
+  font-size: 12px; color: var(--ink-dim); font-style: italic;
+  margin-top: 8px; padding-left: 10px; border-left: 2px solid var(--emerald);
+}
+
+/* ---------- Overlay / settings sheet ---------- */
+.overlay {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(8, 20, 16, 0.5); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.overlay.hidden { display: none; }
+.sheet {
+  background: var(--surface); width: 100%; max-width: 560px;
+  border-radius: 20px 20px 0 0; padding: 22px 18px 30px;
+  position: relative; max-height: 88vh; overflow-y: auto;
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp { from { transform: translateY(28px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.sheet h2 { font-size: 18px; margin-bottom: 6px; }
+.sheet-hint { font-size: 13px; color: var(--ink-dim); margin-bottom: 16px; line-height: 1.5; }
+.sheet-close {
+  position: absolute; top: 14px; right: 14px; width: 34px; height: 34px;
+  border-radius: 50%; border: none; background: var(--surface-2);
+  color: var(--ink); font-size: 15px; cursor: pointer;
+}
+.field { display: block; margin-bottom: 13px; }
+.field span { display: block; font-size: 12px; color: var(--ink-dim); margin-bottom: 6px; font-weight: 600; }
+.field input {
+  width: 100%; background: var(--bg); border: 1px solid var(--line);
+  border-radius: 10px; padding: 11px 12px; color: var(--ink);
+  font-size: 14px; font-family: inherit;
+}
+.field input:focus { outline: none; border-color: var(--emerald); }
+.toggle { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--ink-dim); margin: 6px 0 18px; cursor: pointer; }
+.toggle input { margin-top: 2px; }
+.sheet-actions { display: flex; justify-content: flex-end; }
+.btn-primary {
+  background: var(--emerald); color: #fff; border: none; cursor: pointer;
+  border-radius: 10px; padding: 11px 22px; font-weight: 700; font-size: 14px;
+  font-family: inherit;
+}
+.btn-primary:active { transform: scale(0.97); }

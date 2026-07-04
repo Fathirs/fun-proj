@@ -19,11 +19,16 @@
     </a>
     <nav class="top-nav">
       <a href="#/bookmarks" class="nav-link" title="Bookmark">🔖</a>
+      <button class="nav-link" id="settingsBtn" title="Pengaturan AI (Jatevo)">⚙️</button>
     </nav>
   </header>
 
   <!-- Search bar (selalu tampil, ala pasal.id) -->
   <div class="searchbar-wrap">
+    <div class="search-modes" id="searchModes">
+      <button class="mode active" data-mode="kata">🔤 Kata</button>
+      <button class="mode" data-mode="makna">✨ Makna (AI)</button>
+    </div>
     <form class="searchbar" id="searchForm">
       <span class="search-ico">🔎</span>
       <input type="search" id="searchInput" placeholder="Cari ayat, kata, atau nomor surah…" autocomplete="off" />
@@ -37,6 +42,28 @@
   <!-- Audio player global -->
   <audio id="player" preload="none"></audio>
 
+  <!-- Canvas tersembunyi buat generate kartu share -->
+  <canvas id="cardCanvas" width="1080" height="1350" hidden></canvas>
+
+  <!-- Settings modal (Jatevo) -->
+  <div class="overlay hidden" id="settingsOverlay">
+    <div class="sheet">
+      <button class="sheet-close" id="settingsClose" aria-label="Tutup">✕</button>
+      <h2>⚙️ AI Pencari Makna (Jatevo)</h2>
+      <p class="sheet-hint">Buat fitur <b>Cari Makna (AI)</b>. AI cuma menunjuk ayat relevan; teksnya tetap dari sumber terverifikasi. Kredensial disimpan lokal di browser ini.</p>
+      <label class="field"><span>Base URL</span>
+        <input type="text" id="cfgBaseUrl" placeholder="https://api.jatevo.ai/v1" /></label>
+      <label class="field"><span>Model</span>
+        <input type="text" id="cfgModel" placeholder="nama-model" /></label>
+      <label class="field"><span>API Key</span>
+        <input type="password" id="cfgKey" placeholder="sk-..." /></label>
+      <label class="toggle"><input type="checkbox" id="cfgDemo" />
+        <span>Demo Mode (tanpa API — pakai contoh hasil)</span></label>
+      <div class="sheet-actions"><button class="btn-primary" id="cfgSave">Simpan</button></div>
+    </div>
+  </div>
+
+  <script src="jatevo.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
