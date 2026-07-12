@@ -152,7 +152,7 @@ function generateSticker(transparentBlob, outlineSize = 10) {
 }
 
 /* ---- Screens ---- */
-const SCREENS = ['screenCollection', 'screenProcessing', 'screenDetails', 'screenCatDetail'];
+const SCREENS = ['screenMap', 'screenCollection', 'screenProcessing', 'screenDetails', 'screenCatDetail'];
 
 function showScreen(id, slideFromRight = false) {
   SCREENS.forEach((s) => {
@@ -168,13 +168,48 @@ function showScreen(id, slideFromRight = false) {
   }
 }
 
-/* ---- Collection ---- */
+/* ---- Deterministic hash helpers (stable per cat) ---- */
+function hashCode(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+const RARITY_CP_BASE = { Common: 100, Rare: 400, Epic: 800, Legendary: 1500 };
+function catCp(cat) {
+  return RARITY_CP_BASE[cat.rarity] + (hashCode(cat.id) % 300);
+}
+
+/* ---- Map (overworld) ---- */
+function renderMap() {
+  $('#trainerCount').textContent = `${cats.length} caught`;
+  const layer = $('#mapCats');
+  layer.innerHTML = '';
+  $('#mapHint').style.display = cats.length ? 'none' : '';
+
+  // Scatter cats over the grass, stable position per cat.
+  // Golden-angle spiral by index keeps them spread out; hash adds jitter.
+  cats.forEach((cat, i) => {
+    const h = hashCode(cat.id);
+    const left = 8 + ((i * 47 + h % 23) % 72);        // 8%..80%
+    const top = 10 + ((i * 31 + (h >> 5) % 17) % 62); // 10%..72%
+    const el = document.createElement('div');
+    el.className = 'map-cat';
+    el.style.left = `${left}%`;
+    el.style.top = `${top}%`;
+    el.style.animationDelay = `${(i % 5) * 0.35}s`;
+    el.innerHTML = `<img src="${cat.sticker}" alt="${cat.nickname}" /><span class="map-cat-shadow"></span>`;
+    el.onclick = () => openCatDetail(cat.id);
+    layer.appendChild(el);
+  });
+}
+
+/* ---- Catdex (Pokedex) ---- */
 function renderCollection() {
   const grid = $('#collectionGrid');
   const empty = $('#emptyState');
-  $('#collectionCount').textContent = `${cats.length} cat${cats.length !== 1 ? 's' : ''} caught`;
+  $('#collectionCount').textContent = cats.length;
 
-  grid.querySelectorAll('.cat-card').forEach((c) => c.remove());
+  grid.querySelectorAll('.dex-entry').forEach((c) => c.remove());
 
   if (!cats.length) {
     empty.style.display = '';
@@ -182,23 +217,30 @@ function renderCollection() {
   }
   empty.style.display = 'none';
 
-  const sorted = [...cats].sort((a, b) => b.createdAt - a.createdAt);
-  sorted.forEach((cat) => {
+  const sorted = [...cats].sort((a, b) => a.createdAt - b.createdAt);
+  sorted.forEach((cat, idx) => {
     const card = document.createElement('div');
-    card.className = 'cat-card';
+    card.className = 'dex-entry';
     card.innerHTML = `
-      <div class="cat-card-image">
-        <div class="cat-card-sticker"><img src="${cat.sticker}" alt="${cat.nickname}" /></div>
-        <div class="cat-card-rarity">
-          <span class="rarity-badge ${cat.rarity}">${cat.rarity}</span>
-        </div>
-      </div>
-      <div class="cat-card-info">
-        <div class="cat-card-name">${cat.nickname}</div>
-      </div>`;
+      <div class="dex-entry-no">#${String(idx + 1).padStart(3, '0')}</div>
+      <div class="dex-entry-img"><img src="${cat.sticker}" alt="${cat.nickname}" /></div>
+      <div class="dex-entry-name">${cat.nickname}</div>
+      <div class="dex-entry-cp">CP ${catCp(cat)}</div>`;
     card.onclick = () => openCatDetail(cat.id);
     grid.appendChild(card);
   });
+
+  // Unknown upcoming slots, Pokedex style
+  const unknownSlots = 3;
+  for (let i = 0; i < unknownSlots; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'dex-entry dex-entry-unknown';
+    slot.innerHTML = `
+      <div class="dex-entry-no">#${String(sorted.length + i + 1).padStart(3, '0')}</div>
+      <div class="dex-entry-img"><span class="dex-unknown-mark">?</span></div>
+      <div class="dex-entry-name">???</div>`;
+    grid.appendChild(slot);
+  }
 }
 
 /* ---- Capture flow ---- */
@@ -276,7 +318,7 @@ function saveCat() {
   try {
     persist();
   } catch (e) {
-    toast('Storage full — try deleting some cats first');
+    toast('Storage full — try releasing some cats first');
     cats.pop();
     return;
   }
@@ -284,23 +326,30 @@ function saveCat() {
   pendingBg = null;
   pendingSticker = null;
   renderCollection();
-  showScreen('screenCollection');
-  toast(`${nickname} added to your collection!`);
+  renderMap();
+  showScreen('screenMap');
+  toast(`${nickname} was registered to your Catdex!`);
 }
 
 /* ---- Cat detail ---- */
+let detailReturnTo = 'screenMap';
+
 function openCatDetail(id) {
   const cat = cats.find((c) => c.id === id);
   if (!cat) return;
 
+  detailReturnTo = $('#screenCollection').classList.contains('active')
+    ? 'screenCollection' : 'screenMap';
+
   $('#detailHeroImg').src = cat.sticker;
   $('#detailCatName').textContent = cat.nickname;
+  $('#detailCp').textContent = `CP ${catCp(cat)}`;
 
   const rarityEl = $('#detailRarity');
   rarityEl.textContent = cat.rarity;
   rarityEl.className = `rarity-badge ${cat.rarity}`;
 
-  $('#detailLocation').textContent = cat.location || 'Unknown location';
+  $('#detailLocation').textContent = cat.location || 'Unknown';
   $('#detailDate').textContent = fmtDate(cat.createdAt);
 
   const idx = [...cats].sort((a, b) => a.createdAt - b.createdAt).findIndex((c) => c.id === id);
@@ -318,8 +367,9 @@ function openCatDetail(id) {
     cats = cats.filter((c) => c.id !== id);
     persist();
     renderCollection();
-    showScreen('screenCollection');
-    toast('Removed from collection');
+    renderMap();
+    showScreen(detailReturnTo);
+    toast('Released back into the wild 🐾');
   };
 
   showScreen('screenCatDetail', true);
@@ -329,7 +379,8 @@ function openCatDetail(id) {
 function init() {
   load();
   renderCollection();
-  showScreen('screenCollection');
+  renderMap();
+  showScreen('screenMap');
 
   const fileInput = $('#fileInput');
   $('#fabCapture').onclick = () => fileInput.click();
@@ -338,13 +389,16 @@ function init() {
     e.target.value = '';
   });
 
-  $('#procCancel').onclick = () => showScreen('screenCollection');
+  $('#dexBtn').onclick = () => showScreen('screenCollection', true);
+  $('#dexBack').onclick = () => showScreen('screenMap');
+
+  $('#procCancel').onclick = () => showScreen('screenMap');
   $('#procConfirm').onclick = () => confirmCapture();
-  $('#procRetake').onclick = () => { showScreen('screenCollection'); fileInput.click(); };
+  $('#procRetake').onclick = () => { showScreen('screenMap'); fileInput.click(); };
 
   $('#btnSave').onclick = saveCat;
-  $('#detailsBack').onclick = () => showScreen('screenCollection');
-  $('#catDetailBack').onclick = () => showScreen('screenCollection');
+  $('#detailsBack').onclick = () => showScreen('screenMap');
+  $('#catDetailBack').onclick = () => showScreen(detailReturnTo);
 
   // Settings
   $('#settingsBtn').onclick = () => {

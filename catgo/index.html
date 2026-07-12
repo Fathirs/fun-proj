@@ -8,33 +8,45 @@
 </head>
 <body>
 
-  <!-- ===== SCREEN: Collection (Pokedex) ===== -->
-  <div id="screenCollection" class="screen active">
-    <div class="nav-bar">
-      <div class="nav-title">CatGo</div>
-      <div class="nav-subtitle" id="collectionCount">0 cats caught</div>
-    </div>
-
-    <div class="scroll-area" id="collectionGrid">
-      <div class="empty-state" id="emptyState">
-        <div class="empty-icon">🐾</div>
-        <div class="empty-title">No cats yet</div>
-        <div class="empty-sub">Go outside and catch your first cat!</div>
+  <!-- ===== SCREEN: Map (home, like Pokemon Go overworld) ===== -->
+  <div id="screenMap" class="screen active">
+    <div class="map-scene">
+      <div class="map-sky"></div>
+      <div class="map-ground">
+        <div class="map-path"></div>
+        <span class="map-deco" style="left:8%;  top:18%; font-size:44px">🌳</span>
+        <span class="map-deco" style="left:78%; top:12%; font-size:38px">🌳</span>
+        <span class="map-deco" style="left:65%; top:38%; font-size:30px">🌼</span>
+        <span class="map-deco" style="left:14%; top:52%; font-size:34px">🌿</span>
+        <span class="map-deco" style="left:82%; top:60%; font-size:42px">🌲</span>
+        <span class="map-deco" style="left:38%; top:70%; font-size:28px">🌼</span>
+        <div id="mapCats"></div>
+        <div class="map-hint" id="mapHint">Wild cats will appear here once you catch them! 🐾</div>
       </div>
     </div>
 
-    <button class="fab" id="fabCapture" aria-label="Capture cat">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="13" r="4"/>
-        <path d="M5 7H3a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
-        <path d="M8 7l2-3h4l2 3"/>
-      </svg>
+    <!-- Top bar -->
+    <div class="map-topbar">
+      <div class="trainer-pill">
+        <span class="trainer-avatar">😺</span>
+        <span id="trainerCount">0 caught</span>
+      </div>
+      <button class="settings-btn" id="settingsBtn" aria-label="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Bottom controls: Catdex + Pokeball capture -->
+    <button class="dex-btn" id="dexBtn" aria-label="Open Catdex">
+      <span class="dex-btn-icon">📖</span>
+      <span class="dex-btn-label">Catdex</span>
     </button>
-    <button class="settings-btn" id="settingsBtn" aria-label="Settings">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-      </svg>
+    <button class="pokeball-btn" id="fabCapture" aria-label="Catch a cat">
+      <span class="pokeball-inner"></span>
     </button>
+
     <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none" />
 
     <!-- Settings overlay -->
@@ -56,20 +68,39 @@
     </div>
   </div>
 
-  <!-- ===== SCREEN: Processing ===== -->
+  <!-- ===== SCREEN: Catdex (Pokedex) ===== -->
+  <div id="screenCollection" class="screen">
+    <div class="dex-header">
+      <button class="btn-ghost-icon" id="dexBack">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+      </button>
+      <div class="dex-title">CATDEX</div>
+      <div class="dex-count" id="collectionCount">0</div>
+    </div>
+
+    <div class="scroll-area" id="collectionGrid">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🐾</div>
+        <div class="empty-title">No cats yet</div>
+        <div class="empty-sub">Go outside and catch your first cat!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Processing (encounter) ===== -->
   <div id="screenProcessing" class="screen">
-    <!-- Full-screen blurred background -->
     <div class="proc-bg" id="procBg"></div>
 
-    <!-- Loading state -->
     <div id="procLoading" class="proc-overlay">
       <div class="proc-icon">🐾</div>
-      <div class="proc-label">Identifying cat...</div>
+      <div class="proc-label">A wild cat appeared...</div>
       <div class="proc-dots"><span></span><span></span><span></span></div>
     </div>
 
-    <!-- Preview state: sticker + action buttons -->
     <div id="procPreview" class="proc-overlay hidden">
+      <div class="gotcha-banner">GOTCHA!</div>
       <div class="proc-sticker">
         <img id="procStickerImg" src="" alt="cat" />
       </div>
@@ -87,7 +118,7 @@
     </div>
   </div>
 
-  <!-- ===== SCREEN: Fill Details ===== -->
+  <!-- ===== SCREEN: Register (fill details) ===== -->
   <div id="screenDetails" class="screen">
     <div class="sheet-header">
       <button class="btn-ghost-icon" id="detailsBack">
@@ -95,7 +126,7 @@
           <path d="M19 12H5M12 5l-7 7 7 7"/>
         </svg>
       </button>
-      <div class="sheet-title">Name your cat</div>
+      <div class="sheet-title">Register to Catdex</div>
       <div style="width:36px"></div>
     </div>
 
@@ -123,14 +154,15 @@
         </div>
       </div>
 
-      <button class="btn-primary full-width" id="btnSave">Add to Collection</button>
+      <button class="btn-primary full-width" id="btnSave">Register</button>
     </div>
   </div>
 
-  <!-- ===== SCREEN: Cat Detail ===== -->
+  <!-- ===== SCREEN: Cat Detail (Pokemon Go style) ===== -->
   <div id="screenCatDetail" class="screen">
     <div class="detail-hero-wrap">
       <div class="detail-hero-bg" id="detailHeroBg"></div>
+      <div class="detail-cp" id="detailCp">CP 000</div>
       <button class="btn-back-circle" id="catDetailBack">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 12H5M12 5l-7 7 7 7"/>
@@ -146,25 +178,27 @@
         <div class="detail-cat-name" id="detailCatName">Cat Name</div>
         <span class="rarity-badge" id="detailRarity">Common</span>
       </div>
-      <div class="detail-meta-row">
-        <div class="detail-meta-item">
-          <span class="detail-meta-icon">📍</span>
-          <span class="detail-meta-text" id="detailLocation">—</span>
+
+      <div class="stat-tiles">
+        <div class="stat-tile">
+          <div class="stat-value" id="detailDexNo">#001</div>
+          <div class="stat-label">Catdex No.</div>
         </div>
-        <div class="detail-meta-item">
-          <span class="detail-meta-icon">📅</span>
-          <span class="detail-meta-text" id="detailDate">—</span>
+        <div class="stat-tile">
+          <div class="stat-value" id="detailLocation">—</div>
+          <div class="stat-label">Found at</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-value" id="detailDate">—</div>
+          <div class="stat-label">Caught on</div>
         </div>
       </div>
-      <div class="detail-dex-row">
-        <span class="dex-number" id="detailDexNo">#001</span>
-        <span class="dex-label">in your collection</span>
-      </div>
+
       <div id="detailNotesSection" class="detail-notes-section hidden">
         <div class="detail-notes-label">Notes</div>
         <div class="detail-notes-text" id="detailNotes"></div>
       </div>
-      <button class="btn-ghost-danger" id="btnDeleteCat">Delete from collection</button>
+      <button class="btn-ghost-danger" id="btnDeleteCat">Release from collection</button>
     </div>
   </div>
 
