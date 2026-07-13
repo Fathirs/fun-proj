@@ -76,126 +76,6 @@ html, body {
   transform: translateX(0);
 }
 
-/* ===== Map screen (overworld) ===== */
-#screenMap { background: #7EC850; }
-.map-scene { position: absolute; inset: 0; overflow: hidden; }
-.map-sky {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 22%;
-  background: linear-gradient(180deg, #8ED0F8 0%, #BDE4FA 70%, rgba(189,228,250,0) 100%);
-}
-.map-ground {
-  position: absolute;
-  top: 14%; left: 0; right: 0; bottom: 0;
-  background:
-    radial-gradient(ellipse 300px 120px at 20% 30%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 70%),
-    radial-gradient(ellipse 340px 140px at 80% 65%, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0) 70%),
-    radial-gradient(ellipse 280px 120px at 45% 85%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 70%),
-    linear-gradient(180deg, #8FD661 0%, #7EC850 45%, #6BB944 100%);
-}
-.map-path {
-  position: absolute;
-  left: -20%;
-  top: 30%;
-  width: 140%;
-  height: 130px;
-  background: linear-gradient(180deg, #E8D5A8 0%, #DCC894 100%);
-  border-radius: 50%;
-  transform: rotate(-8deg);
-  opacity: 0.85;
-  box-shadow: inset 0 4px 8px rgba(0,0,0,0.08);
-}
-.map-deco {
-  position: absolute;
-  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.18));
-  user-select: none;
-  pointer-events: none;
-}
-#mapCats { position: absolute; inset: 0; }
-.map-cat {
-  position: absolute;
-  width: 84px;
-  height: 84px;
-  cursor: pointer;
-  animation: map-bob 2.6s ease-in-out infinite;
-  transition: transform 0.15s;
-  z-index: 2;
-}
-.map-cat:active { transform: scale(0.9); }
-.map-cat img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 5px 10px rgba(20,60,20,0.35));
-}
-.map-cat-shadow {
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 54px;
-  height: 12px;
-  background: rgba(0,0,0,0.22);
-  border-radius: 50%;
-  z-index: -1;
-}
-@keyframes map-bob {
-  0%, 100% { margin-top: 0; }
-  50% { margin-top: -8px; }
-}
-.map-hint {
-  position: absolute;
-  left: 50%;
-  top: 42%;
-  transform: translateX(-50%);
-  width: 78%;
-  text-align: center;
-  font-family: var(--font-round);
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-  background: rgba(30,80,30,0.45);
-  border-radius: 18px;
-  padding: 12px 16px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-/* Map top bar */
-.map-topbar {
-  position: absolute;
-  top: calc(var(--safe-top) + 10px);
-  left: 16px;
-  right: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 20;
-}
-.trainer-pill {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #fff;
-  border-radius: 24px;
-  padding: 6px 16px 6px 8px;
-  font-family: var(--font-round);
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--text-primary);
-  box-shadow: 0 3px 12px rgba(0,0,0,0.18);
-}
-.trainer-avatar {
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  background: var(--orange-dim);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-}
-
 /* Pokeball capture button */
 .pokeball-btn {
   position: fixed;
@@ -232,35 +112,6 @@ html, body {
   border: 2px solid rgba(0,0,0,0.12);
 }
 
-/* Catdex button (bottom-left) */
-.dex-btn {
-  position: fixed;
-  bottom: calc(30px + var(--safe-bottom));
-  left: 22px;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: #fff;
-  border: 3px solid #fff;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 5px 16px rgba(0,0,0,0.25);
-  z-index: 100;
-  transition: transform 0.15s;
-}
-.dex-btn:active { transform: scale(0.92); }
-.dex-btn-icon { font-size: 24px; line-height: 1; }
-.dex-btn-label {
-  font-family: var(--font-round);
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--text-secondary);
-  margin-top: 1px;
-}
-
 /* ===== Scroll area ===== */
 .scroll-area {
   flex: 1;
@@ -285,6 +136,11 @@ html, body {
   font-weight: 900;
   letter-spacing: 3px;
   color: #fff;
+}
+.dex-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .dex-count {
   min-width: 40px;

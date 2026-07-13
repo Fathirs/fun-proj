@@ -8,41 +8,28 @@
 </head>
 <body>
 
-  <!-- ===== SCREEN: Map (home, like Pokemon Go overworld) ===== -->
-  <div id="screenMap" class="screen active">
-    <div class="map-scene">
-      <div class="map-sky"></div>
-      <div class="map-ground">
-        <div class="map-path"></div>
-        <span class="map-deco" style="left:8%;  top:18%; font-size:44px">🌳</span>
-        <span class="map-deco" style="left:78%; top:12%; font-size:38px">🌳</span>
-        <span class="map-deco" style="left:65%; top:38%; font-size:30px">🌼</span>
-        <span class="map-deco" style="left:14%; top:52%; font-size:34px">🌿</span>
-        <span class="map-deco" style="left:82%; top:60%; font-size:42px">🌲</span>
-        <span class="map-deco" style="left:38%; top:70%; font-size:28px">🌼</span>
-        <div id="mapCats"></div>
-        <div class="map-hint" id="mapHint">Wild cats will appear here once you catch them! 🐾</div>
+  <!-- ===== SCREEN: Catdex (home) ===== -->
+  <div id="screenCollection" class="screen active">
+    <div class="dex-header">
+      <div class="dex-title">CATDEX</div>
+      <div class="dex-header-right">
+        <div class="dex-count" id="collectionCount">0</div>
+        <button class="settings-btn" id="settingsBtn" aria-label="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
       </div>
     </div>
 
-    <!-- Top bar -->
-    <div class="map-topbar">
-      <div class="trainer-pill">
-        <span class="trainer-avatar">😺</span>
-        <span id="trainerCount">0 caught</span>
+    <div class="scroll-area" id="collectionGrid">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🐾</div>
+        <div class="empty-title">No cats yet</div>
+        <div class="empty-sub">Tap the ball and catch your first stray cat!</div>
       </div>
-      <button class="settings-btn" id="settingsBtn" aria-label="Settings">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
-      </button>
     </div>
 
-    <!-- Bottom controls: Catdex + Pokeball capture -->
-    <button class="dex-btn" id="dexBtn" aria-label="Open Catdex">
-      <span class="dex-btn-icon">📖</span>
-      <span class="dex-btn-label">Catdex</span>
-    </button>
     <button class="pokeball-btn" id="fabCapture" aria-label="Catch a cat">
       <span class="pokeball-inner"></span>
     </button>
@@ -64,27 +51,6 @@
           <div class="settings-hint">Get a free key at <strong>remove.bg/dashboard</strong> (50 free/month). Without a key, AI background removal will be skipped.</div>
           <button class="btn-primary full-width" id="btnSaveSettings" style="margin-top:20px">Save</button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== SCREEN: Catdex (Pokedex) ===== -->
-  <div id="screenCollection" class="screen">
-    <div class="dex-header">
-      <button class="btn-ghost-icon" id="dexBack">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 12H5M12 5l-7 7 7 7"/>
-        </svg>
-      </button>
-      <div class="dex-title">CATDEX</div>
-      <div class="dex-count" id="collectionCount">0</div>
-    </div>
-
-    <div class="scroll-area" id="collectionGrid">
-      <div class="empty-state" id="emptyState">
-        <div class="empty-icon">🐾</div>
-        <div class="empty-title">No cats yet</div>
-        <div class="empty-sub">Go outside and catch your first cat!</div>
       </div>
     </div>
   </div>
