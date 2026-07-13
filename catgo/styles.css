@@ -800,51 +800,137 @@ html, body {
   100% { transform: translate(var(--fly-x), var(--fly-y)) scale(0.28); opacity: 0.9; }
 }
 
-/* Tooltip near the cat */
-.enc-tooltip {
+/* Impact flash */
+.enc-flash {
   position: absolute;
-  transform: translateX(-50%);
-  z-index: 22;
-  width: 240px;
-  background: rgba(255,255,255,0.96);
-  border-radius: var(--radius-md);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
-  padding: 12px 14px;
-  animation: tooltip-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: 40px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%);
+  z-index: 24;
+  animation: flash-burst 0.28s ease-out forwards;
+  pointer-events: none;
 }
-.enc-tooltip::after {
-  content: '';
+.enc-flash.hidden { display: none; }
+@keyframes flash-burst {
+  from { scale: 1; opacity: 1; }
+  to   { scale: 7; opacity: 0; }
+}
+
+/* The treat pinned as a "ball" after impact */
+.enc-treat.enc-ball {
+  width: 52px;
+  height: 52px;
+  font-size: 26px;
+  bottom: auto;
+  z-index: 26;
+  transition: none;
+  cursor: default;
+  pointer-events: none;
+}
+.enc-treat.enc-ball-wobble {
+  animation: ball-wobble 0.75s ease-in-out 3;
+}
+@keyframes ball-wobble {
+  0%, 100% { rotate: 0deg; translate: 0 0; }
+  25%      { rotate: -24deg; translate: -5px 0; }
+  75%      { rotate: 24deg; translate: 5px 0; }
+}
+
+/* Cat gets sucked into the treat */
+.enc-frozen.enc-suck {
+  transition: transform 0.5s cubic-bezier(0.5, 0, 0.9, 0.4), opacity 0.5s;
+  transform: scale(0.01);
+  opacity: 0.2;
+}
+
+/* Star burst */
+.enc-stars {
   position: absolute;
-  bottom: -8px;
+  z-index: 27;
+  pointer-events: none;
+}
+.enc-stars.hidden { display: none; }
+.enc-stars span {
+  position: absolute;
+  font-size: 26px;
+  animation: star-pop 0.9s ease-out forwards;
+}
+.enc-stars span:nth-child(1) { --sx: -70px; --sy: -80px; }
+.enc-stars span:nth-child(2) { --sx: 60px;  --sy: -90px; animation-delay: 0.05s; }
+.enc-stars span:nth-child(3) { --sx: -95px; --sy: -10px; animation-delay: 0.1s; }
+.enc-stars span:nth-child(4) { --sx: 90px;  --sy: -20px; animation-delay: 0.08s; }
+.enc-stars span:nth-child(5) { --sx: -40px; --sy: 60px;  animation-delay: 0.12s; }
+.enc-stars span:nth-child(6) { --sx: 55px;  --sy: 55px;  animation-delay: 0.15s; }
+@keyframes star-pop {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  60%  { transform: translate(calc(-50% + var(--sx)), calc(-50% + var(--sy))) scale(1.2); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--sx) * 1.3), calc(-50% + var(--sy) * 1.3)) scale(0.6); opacity: 0; }
+}
+
+/* GOTCHA on the encounter screen */
+.enc-gotcha {
+  position: absolute;
+  top: 22%;
   left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 16px;
-  height: 16px;
-  background: rgba(255,255,255,0.96);
-  border-radius: 3px;
+  translate: -50% 0;
+  margin-top: 0;
+  z-index: 28;
 }
-.enc-tooltip.hidden { display: none; }
-@keyframes tooltip-pop {
-  from { transform: translateX(-50%) scale(0.6); opacity: 0; }
-  to   { transform: translateX(-50%) scale(1); opacity: 1; }
+.enc-gotcha.hidden { display: none; }
+
+/* Scan result sheet */
+.enc-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  background: var(--surface);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 10px 20px calc(20px + var(--safe-bottom));
+  box-shadow: 0 -8px 30px rgba(0,0,0,0.35);
+  animation: sheet-up 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
 }
-.enc-tooltip-header {
+.enc-sheet.hidden { display: none; }
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.enc-sheet-grabber {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--separator);
+  margin: 0 auto 12px;
+}
+.enc-sheet-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
 }
-.enc-tooltip-breed {
+.enc-sheet-label {
   font-family: var(--font-round);
-  font-size: 16px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+}
+.enc-sheet-breed {
+  font-family: var(--font-round);
+  font-size: 24px;
   font-weight: 900;
   color: var(--orange);
-  line-height: 1.25;
+  line-height: 1.2;
+  margin-top: 2px;
 }
 .enc-tooltip-spinner {
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  margin-top: 8px;
   border-radius: 50%;
   border: 2.5px solid rgba(244,99,42,0.2);
   border-top-color: var(--orange);
@@ -852,27 +938,37 @@ html, body {
 }
 .enc-tooltip-spinner.hidden { display: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.enc-tooltip-rows { margin-top: 6px; }
+.enc-sheet-rows { margin-top: 10px; min-height: 40px; }
 .enc-row {
   display: flex;
-  gap: 6px;
-  font-size: 12.5px;
+  gap: 8px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
-  line-height: 1.45;
-  margin-top: 4px;
+  line-height: 1.5;
+  margin-top: 6px;
 }
 .enc-row span { flex-shrink: 0; }
-
-/* Encounter action buttons */
-.enc-actions {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 26;
+.enc-row b { color: var(--text-primary); font-weight: 700; }
+.enc-sheet-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
 }
-.enc-actions.hidden { display: none; }
+.btn-sheet-ghost {
+  flex: 0 0 auto;
+  background: var(--surface2);
+  border: none;
+  border-radius: 28px;
+  font-family: var(--font-round);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 14px 20px;
+  cursor: pointer;
+}
+.btn-sheet-ghost:active { background: var(--separator); }
+.enc-register-btn { flex: 1; padding: 14px 16px; font-size: 16px; }
 
 /* Breed line on detail page */
 .detail-breed {

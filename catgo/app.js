@@ -271,13 +271,20 @@ function stopCam() {
 function resetEncounterUI() {
   $('#encFrozen').classList.add('hidden');
   $('#encFrozen').src = '';
+  $('#encFrozen').style.transform = '';
   $('#camFeed').classList.remove('hidden');
-  $('#encTooltip').classList.add('hidden');
-  $('#encActions').classList.add('hidden');
+  $('#encSheet').classList.add('hidden');
+  $('#encGotcha').classList.add('hidden');
+  $('#encStars').classList.add('hidden');
+  $('#encFlash').classList.add('hidden');
   $('#encHint').classList.remove('hidden');
   const treat = $('#encTreat');
-  treat.classList.remove('hidden', 'enc-treat-flying');
+  treat.classList.remove('hidden', 'enc-treat-flying', 'enc-ball', 'enc-ball-wobble');
   treat.style.transform = '';
+  treat.style.left = '';
+  treat.style.top = '';
+  treat.style.bottom = '';
+  treat.style.marginLeft = '';
 }
 
 async function openEncounter() {
@@ -306,7 +313,7 @@ function captureFrame() {
   return canvas.toDataURL('image/jpeg', 0.85);
 }
 
-function fillTooltip(info) {
+function fillSheet(info) {
   const rows = $('#encInfoRows');
   $('#encSpinner').classList.add('hidden');
   if (!info) {
@@ -321,55 +328,91 @@ function fillTooltip(info) {
   }
   $('#encBreed').textContent = info.breed || 'Unknown breed';
   rows.innerHTML = [
-    info.colors && `<div class="enc-row"><span>🎨</span>${info.colors}</div>`,
-    info.pattern && `<div class="enc-row"><span>🐾</span>${info.pattern}</div>`,
-    info.temperament && `<div class="enc-row"><span>💛</span>${info.temperament}</div>`,
-    info.funFact && `<div class="enc-row"><span>✨</span>${info.funFact}</div>`,
+    info.colors && `<div class="enc-row"><span>🎨</span><div><b>Colors</b> — ${info.colors}</div></div>`,
+    info.pattern && `<div class="enc-row"><span>🐾</span><div><b>Pattern</b> — ${info.pattern}</div></div>`,
+    info.temperament && `<div class="enc-row"><span>💛</span><div><b>Temperament</b> — ${info.temperament}</div></div>`,
+    info.funFact && `<div class="enc-row"><span>✨</span><div><b>Fun fact</b> — ${info.funFact}</div></div>`,
   ].filter(Boolean).join('');
 }
 
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
 async function treatHit(landX, landY) {
-  // Freeze the frame at the moment of impact
+  // 1. Freeze the frame at the moment of impact
   const frame = captureFrame();
   pendingBg = frame;
   pendingSticker = null;
   pendingInfo = null;
 
-  $('#encFrozen').src = frame;
-  $('#encFrozen').classList.remove('hidden');
+  const frozen = $('#encFrozen');
+  frozen.src = frame;
+  frozen.classList.remove('hidden');
   $('#camFeed').classList.add('hidden');
   stopCam();
   $('#encHint').classList.add('hidden');
-  $('#encTreat').classList.add('hidden');
 
-  // Tooltip near where the treat landed
-  const tip = $('#encTooltip');
-  $('#encBreed').textContent = 'Identifying cat…';
-  $('#encSpinner').classList.remove('hidden');
-  $('#encInfoRows').innerHTML = '';
-  tip.style.left = `${Math.min(Math.max(landX, 90), window.innerWidth - 90)}px`;
-  tip.style.top = `${Math.min(Math.max(landY - 30, 80), window.innerHeight - 220)}px`;
-  tip.classList.remove('hidden');
-  $('#encActions').classList.remove('hidden');
-
-  // Kick off sticker + breed identification in parallel
+  // Kick off sticker + breed scan in parallel with the catch animation
   stickerPromise = (async () => {
     try {
       const transparentBlob = await removeBg(dataUrlToBlob(frame));
       return await generateSticker(transparentBlob, 10);
     } catch {
-      return frame; // fallback: raw frame
+      return frame;
     }
   })();
+  const scanPromise = identifyCat(frame)
+    .then((info) => { pendingInfo = info; return info; })
+    .catch((err) => {
+      console.error('identify failed:', err);
+      return null;
+    });
 
-  try {
-    fillTooltip(await identifyCat(frame));
-  } catch (err) {
-    console.error('identify failed:', err);
-    $('#encSpinner').classList.add('hidden');
-    $('#encBreed').textContent = 'Mysterious stray cat';
-    $('#encInfoRows').innerHTML = `<div class="enc-row">Breed ID failed: ${err.message}</div>`;
-  }
+  // 2. Impact flash at the landing point
+  const flash = $('#encFlash');
+  flash.style.left = `${landX}px`;
+  flash.style.top = `${landY}px`;
+  flash.classList.remove('hidden');
+  await wait(280);
+  flash.classList.add('hidden');
+
+  // 3. Pin the treat "ball" at the landing point
+  const treat = $('#encTreat');
+  treat.classList.remove('enc-treat-flying');
+  treat.style.transform = '';
+  treat.style.bottom = 'auto';
+  treat.style.marginLeft = '0';
+  treat.style.left = `${landX - 26}px`;
+  treat.style.top = `${landY - 26}px`;
+  treat.classList.add('enc-ball');
+
+  // 4. The cat gets sucked into the treat
+  frozen.style.transformOrigin = `${landX}px ${landY}px`;
+  frozen.classList.add('enc-suck');
+  await wait(550);
+  frozen.classList.add('hidden');
+  frozen.classList.remove('enc-suck');
+  frozen.style.transform = '';
+
+  // 5. Wobble... wobble... wobble (the suspense!)
+  treat.classList.add('enc-ball-wobble');
+  await wait(2200);
+  treat.classList.remove('enc-ball-wobble');
+
+  // 6. Caught! Stars + GOTCHA
+  const stars = $('#encStars');
+  stars.style.left = `${landX}px`;
+  stars.style.top = `${landY}px`;
+  stars.classList.remove('hidden');
+  $('#encGotcha').classList.remove('hidden');
+  await wait(700);
+
+  // 7. Slide up the scan result sheet
+  $('#encBreed').textContent = 'Scanning…';
+  $('#encSpinner').classList.remove('hidden');
+  $('#encInfoRows').innerHTML = '';
+  $('#encSheet').classList.remove('hidden');
+
+  fillSheet(await scanPromise);
 }
 
 /* Flick gesture on the treat */
@@ -580,13 +623,14 @@ function init() {
   // Encounter screen
   initTreatGesture();
   $('#encClose').onclick = () => { stopCam(); showScreen('screenCollection'); };
-  $('#encCancel').onclick = () => { stopCam(); showScreen('screenCollection'); };
-  $('#encRetake').onclick = () => openEncounter();
+  $('#encRelease').onclick = () => openEncounter();
   $('#encConfirm').onclick = async () => {
     const btn = $('#encConfirm');
     btn.disabled = true;
+    btn.textContent = 'Preparing sticker…';
     pendingSticker = stickerPromise ? await stickerPromise : pendingBg;
     btn.disabled = false;
+    btn.textContent = 'Register to Catdex';
     confirmCapture();
   };
 

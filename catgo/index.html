@@ -76,29 +76,31 @@
 
     <div class="enc-hint" id="encHint">A wild cat! Flick the treat at it 🎯</div>
 
-    <!-- Tooltip that pops up near the cat after the treat lands -->
-    <div id="encTooltip" class="enc-tooltip hidden">
-      <div class="enc-tooltip-header">
-        <span class="enc-tooltip-breed" id="encBreed">Identifying cat…</span>
-        <span class="enc-tooltip-spinner" id="encSpinner"></span>
-      </div>
-      <div class="enc-tooltip-rows" id="encInfoRows"></div>
+    <!-- Catch FX -->
+    <div id="encFlash" class="enc-flash hidden"></div>
+    <div id="encStars" class="enc-stars hidden">
+      <span>✨</span><span>⭐</span><span>✨</span><span>🌟</span><span>✨</span><span>⭐</span>
     </div>
+    <div id="encGotcha" class="gotcha-banner enc-gotcha hidden">GOTCHA!</div>
 
-    <!-- The treat you throw -->
+    <!-- The treat you throw (becomes the "ball" that wobbles) -->
     <div class="enc-treat" id="encTreat">🍗</div>
 
-    <!-- Confirm actions after capture -->
-    <div class="proc-actions enc-actions hidden" id="encActions">
-      <button class="proc-btn" id="encCancel">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-      <button class="proc-btn proc-btn-confirm" id="encConfirm">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </button>
-      <button class="proc-btn" id="encRetake">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
-      </button>
+    <!-- Scan result sheet (slides up after the catch) -->
+    <div id="encSheet" class="enc-sheet hidden">
+      <div class="enc-sheet-grabber"></div>
+      <div class="enc-sheet-header">
+        <div>
+          <div class="enc-sheet-label">CAT IDENTIFIED</div>
+          <div class="enc-sheet-breed" id="encBreed">Scanning…</div>
+        </div>
+        <span class="enc-tooltip-spinner" id="encSpinner"></span>
+      </div>
+      <div class="enc-sheet-rows" id="encInfoRows"></div>
+      <div class="enc-sheet-actions">
+        <button class="btn-sheet-ghost" id="encRelease">Release</button>
+        <button class="btn-primary enc-register-btn" id="encConfirm">Register to Catdex</button>
+      </div>
     </div>
   </div>
 
