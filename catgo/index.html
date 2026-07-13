@@ -49,13 +49,60 @@
           <div class="form-label" style="margin-bottom:6px">Remove.bg API Key</div>
           <input class="form-input settings-input" id="inputApiKey" type="text" placeholder="Paste your remove.bg API key" autocomplete="off" />
           <div class="settings-hint">Get a free key at <strong>remove.bg/dashboard</strong> (50 free/month). Without a key, AI background removal will be skipped.</div>
+
+          <div class="form-label" style="margin:18px 0 6px">AI Vision — Base URL</div>
+          <input class="form-input settings-input" id="inputAiBaseUrl" type="text" placeholder="e.g. https://ai.sumopod.com/v1" autocomplete="off" />
+          <div class="form-label" style="margin:14px 0 6px">AI Vision — API Key</div>
+          <input class="form-input settings-input" id="inputAiKey" type="text" placeholder="sk-..." autocomplete="off" />
+          <div class="form-label" style="margin:14px 0 6px">AI Vision — Model</div>
+          <input class="form-input settings-input" id="inputAiModel" type="text" placeholder="e.g. gpt-4o-mini" autocomplete="off" />
+          <div class="settings-hint">OpenAI-compatible vision API (SumoPod, OpenAI, etc). Used to identify the cat's breed when you catch it.</div>
+
           <button class="btn-primary full-width" id="btnSaveSettings" style="margin-top:20px">Save</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== SCREEN: Processing (encounter) ===== -->
+  <!-- ===== SCREEN: Encounter (live camera + treat throw) ===== -->
+  <div id="screenEncounter" class="screen">
+    <video id="camFeed" autoplay playsinline muted></video>
+    <img id="encFrozen" class="enc-frozen hidden" alt="" />
+    <div class="enc-vignette"></div>
+
+    <button class="btn-back-circle enc-close" id="encClose">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="enc-hint" id="encHint">A wild cat! Flick the treat at it 🎯</div>
+
+    <!-- Tooltip that pops up near the cat after the treat lands -->
+    <div id="encTooltip" class="enc-tooltip hidden">
+      <div class="enc-tooltip-header">
+        <span class="enc-tooltip-breed" id="encBreed">Identifying cat…</span>
+        <span class="enc-tooltip-spinner" id="encSpinner"></span>
+      </div>
+      <div class="enc-tooltip-rows" id="encInfoRows"></div>
+    </div>
+
+    <!-- The treat you throw -->
+    <div class="enc-treat" id="encTreat">🍗</div>
+
+    <!-- Confirm actions after capture -->
+    <div class="proc-actions enc-actions hidden" id="encActions">
+      <button class="proc-btn" id="encCancel">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <button class="proc-btn proc-btn-confirm" id="encConfirm">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+      <button class="proc-btn" id="encRetake">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: Processing (fallback for photo upload) ===== -->
   <div id="screenProcessing" class="screen">
     <div class="proc-bg" id="procBg"></div>
 
@@ -145,6 +192,8 @@
         <span class="rarity-badge" id="detailRarity">Common</span>
       </div>
 
+      <div class="detail-breed" id="detailBreed"></div>
+
       <div class="stat-tiles">
         <div class="stat-tile">
           <div class="stat-value" id="detailDexNo">#001</div>
@@ -158,6 +207,11 @@
           <div class="stat-value" id="detailDate">—</div>
           <div class="stat-label">Caught on</div>
         </div>
+      </div>
+
+      <div id="detailAboutSection" class="detail-notes-section hidden">
+        <div class="detail-notes-label">About this cat</div>
+        <div class="detail-notes-text" id="detailAbout"></div>
       </div>
 
       <div id="detailNotesSection" class="detail-notes-section hidden">
